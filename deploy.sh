@@ -2,7 +2,7 @@
 
 # Variables
 RESOURCE_GROUP="rg-aoai-kc-aipg-dev"
-LOCATION="Korea Central"
+LOCATION="koreacentral"
 VM_NAME="n8n-vm"
 ADMIN_USERNAME="n8nadmin"
 DNS_PREFIX="n8n-$(date +%s | cut -c6-10)"
@@ -13,6 +13,11 @@ DNS_PREFIX="n8n-$(date +%s | cut -c6-10)"
 # Generate SSH key if it doesn't exist
 if [ ! -f ~/.ssh/id_rsa_n8n ]; then
     ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa_n8n
+fi
+
+if az vm show -g $RESOURCE_GROUP -n $VM_NAME &> /dev/null; then
+  echo "VM already exists. Deleting..."
+  az vm delete -g $RESOURCE_GROUP -n $VM_NAME --yes
 fi
 
 # Deploy the VM
@@ -31,4 +36,4 @@ VM_IP=$(az vm show -d -g $RESOURCE_GROUP -n $VM_NAME --query publicIps -o tsv)
 # Output connection information
 echo "VM deployed successfully!"
 echo "SSH connection: ssh -i ~/.ssh/id_rsa_n8n $ADMIN_USERNAME@$VM_IP"
-echo "DNS name: $DNS_PREFIX.koreacentral.cloudapp.azure.com" 
+echo "DNS name: $DNS_PREFIX.$LOCATION.cloudapp.azure.com" 

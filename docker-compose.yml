@@ -1,8 +1,9 @@
-version: '3.8'
+version: "3.8"
 
 services:
   n8n:
-    image: docker.io/n8nio/n8n:latest
+    image: aoaiaiplayground.azurecr.io/axpg/n8n:latest
+    # image: docker.io/n8nio/n8n:latest
     restart: always
     ports:
       - "5678:5678"
@@ -36,4 +37,4 @@ services:
 
 volumes:
   n8n_data:
-  postgres_data: 
+  postgres_data:

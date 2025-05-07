@@ -3,6 +3,7 @@
 Deploy n8n like a boss on Azure! This repo helps you set up n8n faster than you can say "automation" (okay, maybe not that fast, but pretty close).
 
 ## What's in the Box? 🎁
+
 - 🐳 Docker-powered goodness
 - 🔒 Auto-HTTPS (because security is cool)
 - 💾 PostgreSQL that actually remembers stuff
@@ -10,9 +11,11 @@ Deploy n8n like a boss on Azure! This repo helps you set up n8n faster than you 
 - 🔧 Scripts that do the heavy lifting
 
 ## Why This? 🤔
+
 Because manually setting up n8n on Azure is about as fun as debugging production at 3 AM. This template does all the boring stuff for you, so you can focus on building awesome workflows instead.
 
 ## Cost? 💰
+
 About $15/month - cheaper than your coffee addiction! ☕
 
 _Perfect for: People who love automation but hate complicated setups. Not perfect for: People who enjoy spending weekends configuring servers (you know who you are)._
@@ -26,6 +29,7 @@ This repository contains templates and scripts to deploy n8n workflow automation
 ## Overview
 
 The deployment consists of:
+
 - Azure B1ms VM (1 vCPU, 2GB RAM)
 - Ubuntu 22.04 LTS
 - Docker & Docker Compose
@@ -38,11 +42,13 @@ The deployment consists of:
 ## Prerequisites
 
 1. Azure CLI installed
+
 ```bash
 curl -sL https://aka.ms/InstallAzureCLI | bash
 ```
 
 2. Azure subscription
+
 ```bash
 az login
 ```
@@ -73,6 +79,7 @@ cd n8n-azure-vm-starter
 ### 2. Configure Deployment
 
 Edit `deploy.sh` and set your preferred values:
+
 ```bash
 RESOURCE_GROUP="n8n-rg"
 LOCATION="eastus"
@@ -88,6 +95,7 @@ chmod +x deploy.sh
 ```
 
 The script will:
+
 - Create a resource group
 - Generate SSH keys if needed
 - Deploy the VM using ARM template
@@ -96,7 +104,7 @@ The script will:
 
 ### 4. Configure DNS
 
-Point your domain to the VM's DNS Name (shown in deployment output). We cannot use IP address because it is dynamic and will change when the VM is restarted. Additionally, we are using Caddy as a reverse proxy to automatically handle HTTPS. 
+Point your domain to the VM's DNS Name (shown in deployment output). We cannot use IP address because it is dynamic and will change when the VM is restarted. Additionally, we are using Caddy as a reverse proxy to automatically handle HTTPS.
 
 Make sure to create `CNAME` record for `n8n.example.com` to point to the VM's DNS Name (found in deployment output) on your Domain Registrar.
 
@@ -105,18 +113,23 @@ We need the DNS configured before we setup n8n server because Caddy will use the
 ### 5. Setup n8n
 
 1. SSH into the VM:
+
 ```bash
-ssh -i ~/.ssh/id_rsa_n8n n8nadmin@<VM_IP>
+ssh -i ~/.ssh/id_rsa_n8n n8nadmin@4.217.251.250
+# 4.217.251.250
 ```
 
 2. Open new Terminal and Copy setup files:
+
 ```bash
 # From your local machine
-scp -i ~/.ssh/id_rsa_n8n setup.sh docker-compose.yml backup.sh n8nadmin@<VM_IP>:~/
+scp -i ~/.ssh/id_rsa_n8n setup.sh docker-compose.yml backup.sh n8nadmin@4.217.251.250:~/
 ```
+
 - It will copy all the files to the VM.
 
 3. Run setup:
+
 ```bash
 chmod +x setup.sh
 ./setup.sh
@@ -125,15 +138,18 @@ chmod +x setup.sh
 It will ask for domain name, Please provide your domain name. I prefer to use subdomain like `n8n.yourdomain.com`.
 
 ### 7. Navigate to n8n folder and start containers
+
 ```bash
 cd n8n
 docker-compose up -d
 ```
+
 - we are using volume to persist n8n data to make sure data is not lost when containers are restarted.
 
 ### 8. Access n8n
 
 Once deployment is complete, you can access n8n at:
+
 ```
 https://n8n.your-domain.com
 ```
@@ -143,11 +159,14 @@ Set your own credentials at the first login.
 ## Configuration Files
 
 ### docker-compose.yml
+
 Contains service definitions for:
+
 - n8n
 - PostgreSQL
 
 Key configurations:
+
 ```yaml
 services:
   n8n:
@@ -180,11 +199,13 @@ services:
 ### Backup Configuration
 
 The `backup.sh` script performs:
+
 - PostgreSQL database dumps
 - n8n data volume backup
 - Optional upload to Azure Storage
 
 To enable automatic backups:
+
 ```bash
 (crontab -l 2>/dev/null; echo "0 0 * * * /home/n8nadmin/backup.sh") | crontab -
 ```
@@ -194,6 +215,7 @@ To enable automatic backups:
 ### Updates
 
 Update n8n and PostgreSQL:
+
 ```bash
 docker-compose pull
 docker-compose up -d
@@ -202,16 +224,19 @@ docker-compose up -d
 ### Monitoring
 
 1. Check container status:
+
 ```bash
 docker-compose ps
 ```
 
 2. View logs:
+
 ```bash
 docker-compose logs -f
 ```
 
 3. Monitor system resources:
+
 ```bash
 htop
 ```
@@ -219,6 +244,7 @@ htop
 ### Backups
 
 Manual backup:
+
 ```bash
 ./backup.sh
 ```
@@ -226,10 +252,12 @@ Manual backup:
 ## Security Considerations
 
 1. Firewall rules are configured to allow only:
+
    - SSH (22) Please make sure to disable SSH port 22 in Azure portal.
    - HTTPS (443)
 
 2. SSH access:
+
    - SSH Key-based authentication only and is stored at `~/.ssh/id_rsa_n8n` on your local machine.
    - Password authentication disabled
 
@@ -240,11 +268,13 @@ Manual backup:
 ## Troubleshooting
 
 1. Cannot connect to n8n:
+
    - Check VM status in Azure portal
    - Verify domain DNS settings
    - Check docker containers: `docker-compose ps`
 
 2. Database connection issues:
+
    - Check PostgreSQL logs: `docker-compose logs postgres`
    - Verify environment variables in docker-compose.yml
 
@@ -255,6 +285,7 @@ Manual backup:
 ## Cost Estimation
 
 Monthly cost breakdown:
+
 - VM (B1ms): ~$13.14
 - Storage (OS Disk): ~$2.40
 - Total: ~$15.54/month
@@ -262,6 +293,7 @@ Monthly cost breakdown:
 ## Support
 
 For issues:
+
 1. Check the [n8n documentation](https://docs.n8n.io/)
 2. Open an issue in this repository
 3. Check [n8n community forums](https://community.n8n.io/)
