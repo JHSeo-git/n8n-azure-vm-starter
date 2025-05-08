@@ -115,15 +115,16 @@ We need the DNS configured before we setup n8n server because Caddy will use the
 1. SSH into the VM:
 
 ```bash
-ssh -i ~/.ssh/id_rsa_n8n n8nadmin@4.217.251.250
-# 4.217.251.250
+ssh -i ~/.ssh/id_rsa_n8n n8nadmin@$VM_IP
+# ssh -i ~/.ssh/id_rsa_n8n n8nadmin@4.217.255.153
 ```
 
 2. Open new Terminal and Copy setup files:
 
 ```bash
 # From your local machine
-scp -i ~/.ssh/id_rsa_n8n setup.sh docker-compose.yml backup.sh n8nadmin@4.217.251.250:~/
+scp -i ~/.ssh/id_rsa_n8n setup.sh docker-compose.yml backup.sh n8nadmin@$VM_IP:~/
+# scp -i ~/.ssh/id_rsa_n8n setup.sh docker-compose.yml backup.sh n8nadmin@4.217.255.153:~/
 ```
 
 - It will copy all the files to the VM.

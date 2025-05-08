@@ -17,7 +17,7 @@ services:
       - WEBHOOK_URL=https://${N8N_HOST}
       - NODE_ENV=production
       - N8N_PROTOCOL=https
-      - N8N_SSL_CERT=/etc/caddy/certificates/${N8N_HOST}.crt
+      # - N8N_SSL_CERT=/etc/caddy/certificates/${N8N_HOST}.crt
       - N8N_PORT=5678
       - GENERIC_TIMEZONE=UTC
     volumes:

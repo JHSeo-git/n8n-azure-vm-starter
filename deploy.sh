@@ -3,9 +3,12 @@
 # Variables
 RESOURCE_GROUP="rg-aoai-kc-aipg-dev"
 LOCATION="koreacentral"
-VM_NAME="n8n-vm"
+VM_NAME="axpg-n8n"
 ADMIN_USERNAME="n8nadmin"
 DNS_PREFIX="n8n-$(date +%s | cut -c6-10)"
+
+VNET_NAME="vnet-aoai-kc-aipg-dev-01"
+SUBNET_NAME="sbn-axpg-n8n-apw-01"
 
 # Create resource group
 # az group create --name $RESOURCE_GROUP --location $LOCATION
@@ -18,6 +21,10 @@ fi
 if az vm show -g $RESOURCE_GROUP -n $VM_NAME &> /dev/null; then
   echo "VM already exists. Deleting..."
   az vm delete -g $RESOURCE_GROUP -n $VM_NAME --yes
+  echo "Deleting associated resources..."
+  az network nic delete -g $RESOURCE_GROUP -n ${VM_NAME}-nic
+  az network public-ip delete -g $RESOURCE_GROUP -n ${VM_NAME}-ip
+  az network nsg delete -g $RESOURCE_GROUP -n ${VM_NAME}-nsg
 fi
 
 # Deploy the VM
@@ -28,7 +35,9 @@ az deployment group create \
     vmName=$VM_NAME \
     adminUsername=$ADMIN_USERNAME \
     adminPasswordOrKey="$(cat ~/.ssh/id_rsa_n8n.pub)" \
-    dnsLabelPrefix=$DNS_PREFIX
+    dnsLabelPrefix=$DNS_PREFIX 
+    # vnetName=$VNET_NAME \
+    # subnetName=$SUBNET_NAME
 
 # Get the VM's public IP
 VM_IP=$(az vm show -d -g $RESOURCE_GROUP -n $VM_NAME --query publicIps -o tsv)
