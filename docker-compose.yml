@@ -1,15 +1,6 @@
 version: "3.8"
 
 services:
-  docker:
-    image: docker:dind
-    privileged: true
-    volumes:
-      - docker_data:/var/lib/docker
-      - docker_certs_ca:/certs/ca
-      - docker_certs_client:/certs/client
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
   n8n:
     image: aoaiaiplayground.azurecr.io/axpg/n8n:latest
     restart: always
@@ -41,14 +32,9 @@ services:
       - QUEUE_HEALTH_CHECK_ACTIVE=true
       - GENERIC_TIMEZONE=UTC
       - N8N_SECURE_COOKIE=false
-      - DOCKER_HOST=tcp://docker:2376
-      - DOCKER_TLS_CERTDIR=/certs
     volumes:
       - n8n_data:/home/node/.n8n
-      - docker_certs_client:/certs/client
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   n8n_data:
-  docker_data:
-  docker_certs_ca:
-  docker_certs_client:
