@@ -95,6 +95,19 @@
               "destinationAddressPrefix": "*",
               "destinationPortRange": "443"
             }
+          },
+          {
+            "name": "HTTP",
+            "properties": {
+              "priority": 1002,
+              "protocol": "Tcp",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "5678"
+            }
           }
         ]
       }
