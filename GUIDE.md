@@ -15,7 +15,9 @@ DNS_PREFIX="n8n-$(date +%s | cut -c6-10)"
 3. ssh 접속하여 ./setup.sh 실행
 4. docker 설치 후 ssh 재접속
 5. docker compose 실행
-   1. docker login -u axpg-token -p ... aoaiaiplayground.azurecr.io
+   1. vm에서 registry 로그인: docker login -u axpg-token -p ... aoaiaiplayground.azurecr.io
+6. 실행 후 docker 접속
+   1. vm내 docker conatiner에서 registry 로그인: docker login -u axpg-token -p ... aoaiaiplayground.azurecr.io
 
 생성되는 리소스
 

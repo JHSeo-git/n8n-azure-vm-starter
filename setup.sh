@@ -71,6 +71,9 @@ echo "N8N_HOST=${domain_name}" > .env
 echo "N8N_PROTOCOL=https" >> .env
 echo "N8N_PORT=5678" >> .env
 
+HOST_IP=$(docker network inspect bridge | grep Gateway | awk '{print $2}' | tr -d '",')
+echo "$HOST_IP docker-host" | sudo tee -a /etc/hosts
+
 # Notify user to log out and back in
 echo "Setup complete! Please log out and log back in for docker permissions to take effect."
 echo "Then run 'docker-compose up -d' in the n8n directory to start the containers." 
