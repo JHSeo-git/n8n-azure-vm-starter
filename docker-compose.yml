@@ -32,6 +32,7 @@ services:
       - QUEUE_HEALTH_CHECK_ACTIVE=true
       - GENERIC_TIMEZONE=UTC
       - N8N_SECURE_COOKIE=false
+      - N8N_ENCRYPTION_KEY=QHFkEHJRqk+sRFDesplFn4+xo9S2Cr5X
     volumes:
       - n8n_data:/home/node/.n8n
       - /var/run/docker.sock:/var/run/docker.sock
